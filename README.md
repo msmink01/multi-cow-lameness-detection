@@ -1,10 +1,34 @@
 # Automatic Lameness Detection in Complex Multi-Cow Scenes
 
-Group 16's DSAIT 4125 Final Project by Moniek Smink, Pratham Johari, and Talitha Aarnoutse in Collaboration with the University of Wisconsin-Madison School of Veterinary Medicine.
+By Moniek Smink, Pratham Johari, and Talitha Aarnoutse (Group 16; DSAIT 4125 at TU-Delft) in collaboration with the University of Wisconsin-Madison School of Veterinary Medicine.
 
 # Background
 
-<img src="./figures/Subclinical2.gif" alt="Subclinically lame cow" width="300"> <img src="./figures/Clinical.gif" alt="Clinically lame cow" width="300">
+Cattle husbandry, or the raising of cattle to produce diversified products for consumption, is a huge worldwide industry. The US alone houses more than 89 million cattle, creating an income of more than $80 billion every year<sup>1</sup>. 
+
+One of the top challenges when raising cattle is cattle lameness, seen as abnormal movement such as limping and/or extreme posture such as abnormal headbobbing or back arching. Lameness is a sign of pain or discomfort within the locomotor system and is often caused by bacterial infection or improper hoof trimming. Lameness is often measured on different scales. For the purposes of this report, we separate two types of lameness: 
+
+1) Clinical Lameness: when an animal is noticeably lame.
+2) Subclinical Lameness: when an animal's lameness is subtle.
+
+Please see examples of a clinical and subclinical animal in Figure 1. 
+
+<h5>Figure 1: Examples of a clinically lame cow (left image; first cow: brown) and a subclinically lame cow (right image; third cow: brown).</h5>
+
+<img src="./figures/Clinical.gif" alt="Clinically lame cow" width="300"> <img src="./figures/Subclinical2.gif" alt="Subclinically lame cow" width="300">
+
+Lameness is a huge issue, impacting around 21% of all the world's cattle. If left untreated, lameness is extremely painful and has severe impacts on the health and welfare of a cow. It also is a severe detriment to a farm's production, significantly lowering milk yields. Lameness is often a sign of infection, which, if left untreated, can cause extremely high somatic cell counts (antibody cell counts) in the milk of a cow, also decreasing the quality of the milk. This is a multi-billion $/€ issue affecting hundreds of millions of animals.
+
+What also makes cattle lameness such a significant issue is how challenging it is to manage. Clinical cases are easy enough to identify but are not always treatable. Subclinical cases are almost always cheaply treatable, but are extremely difficult for untrained professionals to identify. Ideally, a farmer would want to identify lameness in the subclinical stage because of the easier and cheaper treatment. On huge farms with thousands of cattle, spotting these subclinical cases early is incredibly difficult.
+
+Thus, the cattle husbandry industry has turned to computer vision as a potential solution to automatically detect lameness in cattle. These systems must be portable to real-world environments, meaning that they must function with limited computational resources, without wifi, and in dirty environments. Furthermore, these systems must operate in close to real-time because, on thousand cow dairies, a system will not have time to process a backlog of footage before a new batch of cows arrive.
+
+Several approaches exist commercially and in the research community that automatically detect lameness in cattle, but these approaches are often sensitive to inter- and intra- animal variability, such as breed of cow, color of cow, and environmental factors. Furthermore, these systems, as far as we are aware, are always for clean, single-cow scenes, where one cow smoothly walks across the frames, and don't generalize to typical cow behavior. Also, the open-source approaches are usually evaluated on small farm environments with less than 200 cows. Finally, none of the open-source approaches use more advanced computer vision techniques such as end-to-end video action recognition, or skeletal action recognition. 
+
+We aim to explore automatic lameness detection in complex, multi-cow scenes using more up-to-date computer vision methods. Our research questions include:
+
+1. How does an existing computer vision technique, such as video action recognition, perform in a difficult task such as multi-cow lameness detection?
+2. How can an automatic lameness detection system be made robust to inter- and intra- animal variability while being portable and operating in close-to-real-time?
 
 ## Related Work
 
