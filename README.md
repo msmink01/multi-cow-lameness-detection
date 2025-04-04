@@ -70,6 +70,10 @@ We aim to explore automatic lameness detection in complex, multi-cow scenes usin
 
 ### Future Work
 
+Thank you for your attention.
+
+<img src="./figures/snout.gif" alt="Multi-cow scene example 3" width="300">
+
 ## Poster
 
 ![Poster](./Poster.svg)
