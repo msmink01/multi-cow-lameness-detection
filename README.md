@@ -6,10 +6,10 @@ By Moniek Smink, Pratham Johari, and Talitha Aarnoutse (Group 16; DSAIT 4125 at 
 
 Cattle husbandry, or the raising of cattle to produce diversified products for consumption, is a huge worldwide industry. The US alone houses more than 89 million cattle, creating an income of more than $80 billion every year<sup>1</sup>. 
 
-One of the top challenges when raising cattle is cattle lameness, seen as abnormal movement such as limping and/or extreme posture such as abnormal headbobbing or back arching. Lameness is a sign of pain or discomfort within the locomotor system and is often caused by bacterial infection or improper hoof trimming. Lameness is often measured on different scales. For the purposes of this report, we separate two types of lameness: 
+One of the top challenges when raising cattle is cattle lameness, seen as abnormal movement, such as limping, and/or extreme posture, such as abnormal headbobbing or back arching. Lameness is a sign of pain or discomfort within the locomotor system of the animal and is often caused by bacterial infection or improper hoof trimming. Lameness is often measured on different scales. For the purposes of this report, we separate two types of cattle lameness: 
 
-1. Clinical Lameness: when an animal is noticeably lame.
-2. Subclinical Lameness: when an animal's lameness is subtle.
+1. Clinical Lameness: when the animal is noticeably lame.
+2. Subclinical Lameness: when the animal's lameness is subtle.
 
 Please see examples of a clinical and subclinical animal in Figure 1. 
 
