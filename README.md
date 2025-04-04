@@ -8,8 +8,8 @@ Cattle husbandry, or the raising of cattle to produce diversified products for c
 
 One of the top challenges when raising cattle is cattle lameness, seen as abnormal movement such as limping and/or extreme posture such as abnormal headbobbing or back arching. Lameness is a sign of pain or discomfort within the locomotor system and is often caused by bacterial infection or improper hoof trimming. Lameness is often measured on different scales. For the purposes of this report, we separate two types of lameness: 
 
-1) Clinical Lameness: when an animal is noticeably lame.
-2) Subclinical Lameness: when an animal's lameness is subtle.
+1. Clinical Lameness: when an animal is noticeably lame.
+2. Subclinical Lameness: when an animal's lameness is subtle.
 
 Please see examples of a clinical and subclinical animal in Figure 1. 
 
