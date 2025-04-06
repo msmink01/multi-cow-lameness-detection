@@ -42,7 +42,7 @@ We aim to explore automatic lameness detection in complex, multi-cow scenes (sho
 1. How does an existing computer vision technique, such as end-to-end video action recognition, perform in a difficult task such as multi-cow lameness detection?
 2. How can an automatic lameness detection system be made robust to inter- and intra- animal variability in a large production environment, while still being portable and efficient?
 
-# Methods
+# Methods & Intermediate Results
 
 ## The Data
 
@@ -106,11 +106,13 @@ After removing frames with no animals present, 972 keypoint frames were then spl
 
 In order to accomplish multi-object pose estimation, we leveraged the YoloV8-Large-Pose model which takes a 640x640 frame and returns keypoints for each detected object. TODO: expand yolo model, how does it predict? Customized backbone, PAN-FPN neck, and pose estimation head blah blah. Uses a multi-part loss function that combines Complete Intersection over Union (CIoU) loss for the bounding boxes, Binary Cross-Entropy (BCE) loss for the objectness score, BCE loss for multi-class classification, and MSE loss for regressing the keypoint positions. We chose to use the Yolov8L-Pose model because of its competitive performance, extremely fast inference on edge devices, and ease of use. 
 
-Our YoloV8L-Pose model was finetuned on our keypoint dataset described above for 300 epochs total, split into one training run for 200 epochs, and another for 100 epochs when we saw that pose validation loss had not yet converged. Training curves for this training can be seen in Figure 4.
+Our YoloV8L-Pose model was finetuned on our keypoint dataset described above for 300 epochs total, split into one training run for 200 epochs, and another for 100 epochs when we saw that pose validation loss had not yet converged. Training curves for this training can be seen in Figure 4. And the final precision-recall curves for the bounding box and pose estimation can be seen in Figure 5.
 
-<h5>Figure 4: Training curves of the YoloV8L-Pose model on our custom multi-cow 4-point keypoint dataset.</h5>
+<h5>Figure 4: Training and Precision-Recall curves of the YoloV8L-Pose model on our custom multi-cow 4-point keypoint dataset.</h5>
 
 <img src="./figures/TrainingCurves.png" alt="Training curves" height="250">
+
+<img src="./figures/PosePR_curve.png" alt="Pose PR Curve" height="250"> <img src="./figures/BoxPR_curve.png" alt="Box PR Curve" height="250">
 
 On top of the yolo model, we used a multi-object tracking algorithm called BoT-SORT to automatically assign a tracking id to each detected set of keypoints, based on previous frames' detections. BoT-SORT is an advanced algorithm that combines appearance features, motion prediction using Kalman filtering, history-detection matching using the Hungarian algorithm, and introduces Camera Motion Compensation (CMC) and appearance embedding (ReID) matching tricks. We chose this particular tracking layer because of its robustness to occlusion and real-time inference. Due to our limited time, we were not able to quantitatively evaluate the BoT-SORT tracking algorithm.
 
