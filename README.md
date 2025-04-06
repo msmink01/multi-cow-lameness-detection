@@ -33,7 +33,7 @@ Several approaches exist, commercially and in the research community, that autom
 
 Finally, none of the open-source approaches for automatic lameness detection use more advanced computer vision techniques such as end-to-end video action recognition <sup>7</sup>, or skeletal action recognition<sup>4,5,6</sup>, although other tasks such as cattle behavior recognition have explored such methods <sup>10</sup>. Existing approaches often employ a three stage approach. First, they localize the animal using foot detection, cow pose estimation, or cow segmentation with methods such as Faster-RCNN, T-LEAP, and Mask-RCNN. They then calculate hand-made features such as step length, head bob, and back arch coefficients. Finally they classify based on traditional discriminative classifiers such as support vector machines (SVMs), logistic regression, or decision trees<sup>4,5,6</sup>.
 
-A classic end-to-end video action recognition method leveraged in this report is Inflated 3D networks (I3D). I3D is a two stream 3D convolutional neural network (CNN) that uses both RGB and optical flow frame inputs to classify human actions such as kicking and punching in videos <sup>7</sup>. Although not fully explored in this report, typical skeletal action recognition methods include spatial temporal graph convolutional networks (ST-GCNs) <sup>8</sup> and Pose C3Ds<sup>9</sup> which process spatiotemporal features using graph convolutions and 3D heatmap convolutions, respectively, to classify actions in videos. Finally, the temporal component needed to identify lameness makes attention mechanisms and RNN mechanisms particularly promising, as both of these methods have ways to combine temporal contexts to reason over time.
+A classic end-to-end video action recognition method leveraged in this report is Inflated 3D networks (I3D). I3D is a two stream 3D convolutional neural network (CNN) that uses both RGB and optical flow frame inputs to classify human actions such as kicking and punching in videos<sup>7</sup>. Although not fully explored in this report, typical skeletal action recognition methods include spatial temporal graph convolutional networks (ST-GCNs) <sup>8</sup> and Pose C3Ds<sup>9</sup> which process spatiotemporal features using graph convolutions and 3D heatmap convolutions, respectively, to classify actions in videos. Finally, the temporal component needed to identify lameness makes attention mechanisms and RNN mechanisms particularly promising, as both of these methods have ways to combine temporal contexts to reason over time.
 
 ### Research Questions
 
@@ -62,7 +62,7 @@ Subsets of the 6 hours of source footage were randomly selected for processing a
 
 #### Model & Intermediate Results
 
-For this experiment, we leveraged I3D, a standard video action recognition model pretrained on Kinetics-400 which takes 32 224x224 frames as input. We finetuned the model for 10 epochs using stochastic gradient descent with random cropping and horizontal flipping on the unbalanced and balanced datasets described above. The resulting top1 accuracy and average top1 accuracy across the three classes is shown in Table 1.
+For this experiment, we leveraged I3D<sup>7</sup>, a standard video action recognition model pretrained on Kinetics-400 which takes 32 224x224 frames as input. We finetuned the model for 10 epochs using stochastic gradient descent with random cropping and horizontal flipping on the unbalanced and balanced datasets described above. The resulting top1 accuracy and average top1 accuracy across the three classes is shown in Table 1.
 
 <h5>Table 1: Top1 accuracy and average top1 accuracy of all classes of the finetuned I3D model on our custom cattle lameness dataset.</h5>
 
@@ -75,13 +75,26 @@ For this experiment, we leveraged I3D, a standard video action recognition model
 
 #### Discussion & Next Steps
 
-We see that end-to-end video action recognition has a lot of trouble with spotting lameness. I3D is pretrained on human actions which are often obvious from a single frame or a few frames, thus its 32 resized frame sampling strategy is effective. In our case, fine-grained (frame-by-frame) temporal relationships are necessary to identify lameness, which I3D's 32 resized frame sampling strategy can't deal with effectively. Furthermore, I3D must learn to deal with a lot of variability in each scene including cow positions, cow colorings, and cow tracking. Perhaps controlling the sampling strategy to be more fine-grained could improve I3D's performance, but we simply don't have enough data to teach an I3D model how to handle this fine-grained temporal information while also being robust to scene variabilities. Thus, we look into approaches that abstract away the scene variabilities to hopefully focus on the important temporal information that can signify lamenesse in a cow. These dimensionality reduction approaches also have the added benefit of likely being much faster than I3D.
+We see that end-to-end video action recognition has a lot of trouble with spotting lameness. I3D is pretrained on human actions which are often obvious from a single frame or a few frames, thus its 32 resized frame sampling strategy is effective. In our case, fine-grained (frame-by-frame) temporal relationships are necessary to identify lameness, which I3D's 32 resized frame sampling strategy can't deal with effectively. Furthermore, I3D must learn to deal with a lot of variability in each scene including cow positions, cow colorings, and cow occlusion. Perhaps controlling the sampling strategy to be more fine-grained could improve I3D's performance, but we simply don't have enough data to teach an I3D model how to handle this fine-grained temporal information while also being robust to scene variabilities. Thus, we look into approaches that abstract away the scene variabilities to hopefully focus on the important temporal information that can signify lamenesse in a cow. These dimensionality reduction approaches also have the added benefit of likely being much faster than I3D.
 
 ### Multi-Cow Localization + Classification
 
+In order to abstract away scene variabilities such as coloring, extraneous behavior, occlusion, and surroundings, we leveraged a two step approach. We first localize and track important features of a cow over time and then, based on that sequence of tracked features, predict lameness for that localized cow.
+
 #### Pose Estimation + Tracking: Yolov8l-pose + BoT-SORT
 
+We first localize a cow using pose estimation with keypoints. This step removes any extraneous information about the surroundings of the cow and allows the downstream classification model to only focus on a set of features important to the lameness classification. 
+
 ##### Data Annotation
+
+We randomly select 1,015 frames from our source footage and label four keypoints with optional occlusion or out-of-frame flags per cow present in the frame using CVAT. The four keypoints we chose to label were:
+
+1. Right Front (RF)
+2. Right Rear (RR)
+3. Left Rear (LR)
+4. Left Front (LF)
+
+We chose to label keypoints in this way to deal with occlusion and to make processing more efficient. Following previously defined 10-point or 17-point cow keypoint schemas would flood the classification model with potentially unecessary keypoints that are not usually available in complex multi-cow scenes. This would make our keypoint model and the downstream classification model more unstable and inefficient, thus we decided to only use the four feet keypoints in our approach. An example frame labeled by us along with the mentioned 10 and 17-point previous keypoint schemas are shown in Figure 3.
 
 ##### Intermediate Results
 
