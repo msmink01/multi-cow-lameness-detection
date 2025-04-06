@@ -52,15 +52,15 @@ The data was annotated by us in three different ways to be used in three differe
 
 ## Approaches & Intermediate Results
 
-### Video Action Recognition
+## 1. Video Action Recognition
 
 To the best of our knowledge, no one in existing literature has tried end-to-end video action recognition on cattle lameness before. Thus, we decided to try this.
 
-#### Data Annotation
+### Data Annotation
 
 Subsets of the 6 hours of source footage were randomly selected for processing and were split into over one thousand 5 second clips. These 5 second clips were then either pseudo labeled by us and then verified by Dr. Döpfer, or directly labeled by Dr. Döpfer without our assistance. This yielded 1,015 clips with a 'Not Lame' (78.23%), 'Subclinically Lame' (13.69%), or 'Clinically Lame' (8.08%) label. It was decided that if there was a single cow in the clip that was lame, the whole clip would be labeled as such, with a worst label priority rule. These clips were then split into train (80%), validation (10%), and test (10%) sets to be used to train and evaluate our video action recognition models. Since the distribution of the different labels was significantly unbalanced, a balanced version of the training dataset was also created where the two lame labels were oversampled (essentially tripled) to form a label distribution of 38.63%, 36.10%, and 25.27%. The 'Not Lame' label was not undersampled to still allow the model to learn animal variability.
 
-#### Model & Intermediate Results
+### Model & Intermediate Results
 
 For this experiment, we leveraged I3D<sup>7</sup>, a standard video action recognition model pretrained on Kinetics-400 which takes 32 224x224 frames as input. We finetuned the model for 10 epochs using stochastic gradient descent with random cropping and horizontal flipping on the unbalanced and balanced datasets described above. The resulting top1 accuracy and average top1 accuracy across the three classes is shown in Table 1.
 
@@ -73,19 +73,19 @@ For this experiment, we leveraged I3D<sup>7</sup>, a standard video action recog
 
 <h6>† Top1 Accuracy refers to the percentage of samples for which the top predicted class is the correct label.</h6>
 
-#### Discussion & Next Steps
+### Discussion & Next Steps
 
 We see that end-to-end video action recognition has a lot of trouble with spotting lameness. I3D is pretrained on human actions which are often obvious from a single frame or a few frames, thus its 32 resized frame sampling strategy is effective. In our case, fine-grained (frame-by-frame) temporal relationships are necessary to identify lameness, which I3D's 32 resized frame sampling strategy can't deal with effectively. Furthermore, I3D must learn to deal with a lot of variability in each scene including cow positions, cow colorings, and cow occlusion. Perhaps controlling the sampling strategy to be more fine-grained could improve I3D's performance, but we simply don't have enough data to teach an I3D model how to handle this fine-grained temporal information while also being robust to scene variabilities. Thus, we look into approaches that abstract away the scene variabilities to hopefully focus on the important temporal information that can signify lamenesse in a cow. These dimensionality reduction approaches also have the added benefit of likely being much faster than I3D.
 
-### Multi-Cow Localization + Classification
+## 2. Multi-Cow Localization + Classification
 
 In order to abstract away scene variabilities such as coloring, extraneous behavior, occlusion, and surroundings, we leveraged a two step approach. We first localize and track important features of a cow over time and then, based on that sequence of tracked features, predict lameness for that localized cow.
 
-#### Pose Estimation + Tracking: YoloV8L-Pose + BoT-SORT
+### Pose Estimation + Tracking
 
-We first localize a cow using pose estimation with keypoints. This step removes any extraneous information about the surroundings of the cow and allows the downstream classification model to only focus on a set of features important to the lameness classification. 
+We first localize a cow using pose estimation with keypoints. This step removes any extraneous information about the surroundings of the cow and allows the downstream classification model to only focus on a set of features important to the lameness classification. Then, we track these features across the input frames, allowing the downstream classification model to learn fine-grained temporal relationships between the extracted features to hopefully classify lameness.
 
-##### Data Annotation
+#### Data Annotation
 
 We randomly select 1,015 frames from our source footage and label four keypoints with optional occlusion or out-of-frame flags per cow present in the frame using CVAT. The four keypoints we chose to label were:
 
@@ -102,29 +102,47 @@ We chose to label keypoints in this way to deal with occlusion and to make proce
 
 After removing frames with no animals present, 972 keypoint frames were then split into a train and validation set with an 80-20 split to be used to train the pose estimation model.
 
-##### Model & Intermediate Results
+#### Model & Intermediate Results
+
+##### YoloV8L-Pose
 
 In order to accomplish multi-object pose estimation, we leveraged the YoloV8-Large-Pose model which takes a 640x640 frame and returns keypoints for each detected object. TODO: expand yolo model, how does it predict? Customized backbone, PAN-FPN neck, and pose estimation head blah blah. Uses a multi-part loss function that combines Complete Intersection over Union (CIoU) loss for the bounding boxes, Binary Cross-Entropy (BCE) loss for the objectness score, BCE loss for multi-class classification, and MSE loss for regressing the keypoint positions. We chose to use the Yolov8L-Pose model because of its competitive performance, extremely fast inference on edge devices, and ease of use. 
 
-Our YoloV8L-Pose model was finetuned on our keypoint dataset described above for 300 epochs total, split into one training run for 200 epochs, and another for 100 epochs when we saw that pose validation loss had not yet converged. Training curves for this training can be seen in Figure 4. And the final precision-recall curves for the bounding box and pose estimation can be seen in Figure 5.
+Our YoloV8L-Pose model was finetuned on our keypoint dataset described above for 300 epochs total, split into one training run for 200 epochs, and another for 100 epochs when we saw that pose validation loss had not yet converged. Training curves for this training can be seen in Figure 4. The final precision-recall curves for the bounding box and pose estimation can be seen in Figure 5. And the final mean Average Precisions (mAPs) for both bounding boxes and pose estimation can be seen in Table 2.
 
-<h5>Figure 4: Training and Precision-Recall curves of the YoloV8L-Pose model on our custom multi-cow 4-point keypoint dataset.</h5>
+<h5>Figure 4: Training curves (top) and pose Precision-Recall curve (bottom) of the YoloV8L-Pose model on our custom multi-cow 4-point keypoint dataset.</h5>
 
 <img src="./figures/TrainingCurves.png" alt="Training curves" height="250">
 
-<img src="./figures/PosePR_curve.png" alt="Pose PR Curve" height="250"> <img src="./figures/BoxPR_curve.png" alt="Box PR Curve" height="250">
+<img src="./figures/PosePR_curve.png" alt="Pose PR Curve" height="250">
 
-On top of the yolo model, we used a multi-object tracking algorithm called BoT-SORT to automatically assign a tracking id to each detected set of keypoints, based on previous frames' detections. BoT-SORT is an advanced algorithm that combines appearance features, motion prediction using Kalman filtering, history-detection matching using the Hungarian algorithm, and introduces Camera Motion Compensation (CMC) and appearance embedding (ReID) matching tricks. We chose this particular tracking layer because of its robustness to occlusion and real-time inference. Due to our limited time, we were not able to quantitatively evaluate the BoT-SORT tracking algorithm.
+<h5>Table 2: Mean Average Precisions (mAPs) for different Intersection over Union (IoU) thresholds for the final YoloV8L-Pose model trained on our custom multi-cow 4-point keypoint dataset.</h5>
 
-<h5>Figure 6: Example YoloV8L-pose keypoint estimation and BoT-SORT tracking (seen in 'id' field in text).</h5>
+| Type of Prediction   | mAP@0.5† | mAP@0.5:0.95*  |
+|-----------|------------|-----------------------|
+| Pose       | 48.49      | 31.96                 |
+| Box  | 43.92      | 19.64                 |
+
+<h6>† mAP@0.5: Mean Average Precision at IoU threshold of 0.5. Indicates how well the model detects objects/keypoints with a reasonable overlap.</h6>
+<h6>* mAP@0.5:0.95: Mean Average Precision averaged over IoU thresholds from 0.5 to 0.95 (in steps of 0.05). A more stringent and comprehensive metric for model performance.</h6>
+
+##### BoT-SORT
+
+On top of the yolo model, we used a multi-object tracking algorithm called BoT-SORT to automatically assign a tracking id to each detected set of keypoints, based on previous frames' detections. BoT-SORT is an advanced algorithm that combines appearance features, motion prediction using Kalman filtering, history-detection matching using the Hungarian algorithm, and introduces Camera Motion Compensation (CMC) and appearance embedding (ReID) matching tricks. We chose this particular tracking layer because of its robustness to occlusion and real-time inference. Due to our limited time, we were not able to quantitatively evaluate the BoT-SORT tracking algorithm, but an overall qualitative example of how the final yolo + tracking pipeline functioned can be seen in Figure 6.
+
+<h5>Figure 6: Example YoloV8L-pose keypoint estimation and BoT-SORT tracking (seen in 'id' field in text) for a short real-world clip.</h5>
 
 <img src="./figures/YoloPreds.gif" alt="Example outputs of the yolo model and tracking layer" width="500">
 
-#### Lameness Classification: RNNs
+#### Discussion
 
-##### Data Annotation
+### Lameness Classification
 
-##### Intermediate Results
+#### Data Annotation
+
+#### Model & Intermediate Results
+
+#### Discussion
 
 ### Other Tried Methods
 
