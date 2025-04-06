@@ -102,7 +102,7 @@ After localizing the feet over time, a lameness classifier needs to take these s
 
 #### Data Annotation
 
-In order to obtain sequences of keypoints over time with lameness labels, we took our 1,015 labeled clips from the VAR experiments and performed inference using our YoloV8L-Pose/BoT-SORT pipeline. Each clip now had a set of tracking ids (tIDs). Each tID had a list of the keypoints found in each frame for that tID. We filtered any tID with less than 20 frames, because, at 30 FPS, 20 frames would be less than a single step of a cow. Furthermore, Dr. Döpfer filtered out 43 clips where lameness scoring was impossible due to cow crowds or human interference. This left a total of 7,897 sequences of keypoints over the clips. We then went back through every clip to match each tID to the vet-confirmed label. This dataset was then split into train (80%), validation (10%), and test (10%) sets. This dataset was unbalanced, with around 95%, 3%, and 2% of the samples being in the 'Not Lame', 'Subclinically Lame', and 'Clinically Lame' classes, respectively.
+In order to obtain sequences of keypoints over time with lameness labels, we took our 1,015 labeled clips from the VAR experiments and performed inference using our YoloV8L-Pose/BoT-SORT pipeline. Each clip now had a set of tracking ids (tIDs). Each tID had a list of the keypoints found in each frame for that tID. We filtered any tID with less than 20 frames, because, at 30 FPS, 20 frames would be less than a single step of a cow. Furthermore, Dr. Döpfer filtered out 43 clips where lameness scoring was impossible due to cow crowds or human interference. This left a total of 7,897 sequences of keypoints over the clips. We then went back through every clip to match each tID to the vet-confirmed label. This dataset was then split into train (80%), validation (10%), and test (10%) sets. This dataset was unbalanced, with around 95%, 3%, and 2% of the samples being in the 'Not Lame', 'Subclinically Lame', and 'Clinically Lame' classes, respectively. The test set contained continuous tIDs from the same clips to enable qualitative analysis of whole clips.
 
 #### Model Selection
 
@@ -151,8 +151,8 @@ The training curves and final pose precision-recall curve of the YoloV8L-Pose po
 | Pose       | 48.49      | 31.96                 |
 | Box  | 43.92      | 19.64                 |
 
-<h6>† mAP@0.5: Mean Average Precision at IoU threshold of 0.5. Indicates how well the model detects objects/keypoints with a reasonable overlap.</h6>
-<h6>* mAP@0.5:0.95: Mean Average Precision averaged over IoU thresholds from 0.5 to 0.95 (in steps of 0.05). A more stringent and comprehensive metric for model performance.</h6>
+<h6>† mAP@0.5: Mean Average Precision at IoU threshold of 0.5. Indicates how well the model detects objects/keypoints with a reasonable overlap.<br>
+* mAP@0.5:0.95: Mean Average Precision averaged over IoU thresholds from 0.5 to 0.95 (in steps of 0.05). A more stringent and comprehensive metric for model performance.</h6>
 
 <h5>Figure 6: Example YoloV8L-pose keypoint estimation and BoT-SORT tracking, seen in 'id' field, for a short real-world clip.</h5>
 
@@ -171,8 +171,8 @@ Results for each type of lameness classification RNN can be seen in Table 3. Bec
 | GRU       | 35.98      | 83.85                 |
 | BiLSTM  | 34.97      | 83.60                 |
 
-<h6>† Macro-F1: the average F1 score for all classes, weighted equally.</h6>
-<h6>* Weighted-F1: the average F1 score for all classes, weighted by class prevalence.</h6>
+<h6>† Macro-F1: the average F1 score for all classes, weighted equally.<br>
+* Weighted-F1: the average F1 score for all classes, weighted by class prevalence.</h6>
 
 <h5>Figure 7: Confusion matrix of the GRU-based lameness classification model on our lameness classification validation dataset.</h5>
 
@@ -188,11 +188,11 @@ The overall quantitative performance of our two-stage lameness recognition pipel
 
 <h5>Table 4: Final performance of our YoloV8L-Pose/BoT-SORT/GRU lameness recognition pipeline on our multi-cow test dataset.</h5>
 
-| tID Top1 Accuracy | Average Clip Macro-F1  | Average Clip Weighted-F1  |
+| Top1 Accuracy of all Tracking IDs | Average Macro-F1 of all 5s Clips  | Average Weighted-F1 of all 5s Clips  |
 |-----------|------------|-----------------------|
 | 79.08%       | 54.70      | 82.09              |
 
-<h5>Table 4: Example lameness predictions of our YoloV8L-Pose/BoT-SORT/GRU lameness recognition pipeline. The first brown cow is subclinically lame. The last brown cow is clinically lame.</h5>
+<h5>Figure 8: Example lameness predictions of our YoloV8L-Pose/BoT-SORT/GRU lameness recognition pipeline. The first brown cow is subclinically lame. The last brown cow is clinically lame.</h5>
 
 <img src="./figures/Final2.gif" alt="Final example outputs of our final pipeline" width="700">
 
