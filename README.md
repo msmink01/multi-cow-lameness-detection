@@ -2,6 +2,10 @@
 
 <h4>By Moniek Smink, Pratham Johari, and Talitha Aarnoutse (TU-Delft) in collaboration with the University of Wisconsin-Madison School of Veterinary Medicine.</h4>
 
+## Poster
+
+![Poster](./Poster.svg)
+
 # Background & Motivation
 
 Cattle husbandry, or the raising of cattle to produce diversified products for consumption, is a huge worldwide industry. The US alone houses more than 89 million cattle, creating an income of more than $80 billion every year<sup>1</sup>. 
@@ -208,16 +212,12 @@ Thank you for your attention.
 
 <img src="./figures/snout.gif" alt="Multi-cow scene example 3" width="300">
 
-## Poster
-
-![Poster](./Poster.svg)
-
 ### Acknowledgements
 
 We would like to thank the researchers and veterinarians at UW-Madison and the farmers and herds(wo)men who helped us with this project.
 
 ### References
-1. Cattle & Beef - Sector at a glance (2025) Cattle & Beef - Sector at a Glance | USDA Economic Research Service. Available at: https://www.ers.usda.gov/topics/animal-products/cattle-beef/sector-at-a-glance.
+1. Cattle & Beef - Sector at a glance (2025) USDA Economic Research Service. Available at: https://www.ers.usda.gov/topics/animal-products/cattle-beef/sector-at-a-glance.
 2. Grimm, K., Haidn, B., Erhard, M., Tremblay, M., & Döpfer, D. (2019). New insights into the association between lameness, behavior, and performance in Simmental cows. Journal of Dairy Science, 102(3), 2453–2468. https://doi.org/https://doi.org/10.3168/jds.2018-15035
 3. J.N. Huxley, Impact of lameness and claw lesions in cows on health and production, Livestock Science, Volume 156, Issues 1–3, 2013, Pages 64-70, ISSN 1871-1413, https://doi.org/10.1016/j.livsci.2013.06.012.
 4. Myint, B.B., Onizuka, T., Tin, P. et al. Development of a real-time cattle lameness detection system using a single side-view camera. Sci Rep 14, 13734 (2024). https://doi.org/10.1038/s41598-024-64664-7
