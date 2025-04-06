@@ -10,7 +10,7 @@
 
 Cattle husbandry, or the raising of cattle to produce diversified products for consumption, is a huge worldwide industry. The US alone houses more than 89 million cattle, creating an income of more than $80 billion every year<sup>1</sup>. 
 
-Tthe third most import dairy production health problem is cattle lameness, seen as abnormal movement and/or extreme posture, such as limping, abnormal headbobbing, or back arching<sup>2</sup>. Lameness is a sign of pain or discomfort within the locomotor system of the animal and is often caused by bacterial infection or improper hoof trimming. Lameness is measured in different ways, including 3, 4, and 9 point scales. For the purposes of this report, we separate two types of cattle lameness: 
+The third most import dairy production health problem is cattle lameness, seen as abnormal movement and/or extreme posture, such as limping, abnormal headbobbing, or back arching<sup>2</sup>. Lameness is a sign of pain or discomfort within the locomotor system of the animal and is often caused by bacterial infection or improper hoof trimming. Lameness is measured in different ways, including 3, 4, and 9 point scales. For the purposes of this report, we separate two types of cattle lameness: 
 
 1. Clinical Lameness: when the animal is noticeably lame.
 2. Subclinical Lameness: when the animal's lameness is subtle.
