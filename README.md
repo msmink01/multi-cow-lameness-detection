@@ -81,7 +81,7 @@ We see that end-to-end video action recognition has a lot of trouble with spotti
 
 In order to abstract away scene variabilities such as coloring, extraneous behavior, occlusion, and surroundings, we leveraged a two step approach. We first localize and track important features of a cow over time and then, based on that sequence of tracked features, predict lameness for that localized cow.
 
-#### Pose Estimation + Tracking: Yolov8l-pose + BoT-SORT
+#### Pose Estimation + Tracking: YoloV8L-Pose + BoT-SORT
 
 We first localize a cow using pose estimation with keypoints. This step removes any extraneous information about the surroundings of the cow and allows the downstream classification model to only focus on a set of features important to the lameness classification. 
 
@@ -89,14 +89,32 @@ We first localize a cow using pose estimation with keypoints. This step removes 
 
 We randomly select 1,015 frames from our source footage and label four keypoints with optional occlusion or out-of-frame flags per cow present in the frame using CVAT. The four keypoints we chose to label were:
 
-1. Right Front (RF)
-2. Right Rear (RR)
-3. Left Rear (LR)
-4. Left Front (LF)
+1. Right Front (RF) foot
+2. Right Rear (RR) foot
+3. Left Rear (LR) foot
+4. Left Front (LF) foot
 
 We chose to label keypoints in this way to deal with occlusion and to make processing more efficient. Following previously defined 10-point or 17-point cow keypoint schemas would flood the classification model with potentially unecessary keypoints that are not usually available in complex multi-cow scenes. This would make our keypoint model and the downstream classification model more unstable and inefficient, thus we decided to only use the four feet keypoints in our approach. An example frame labeled by us along with the mentioned 10 and 17-point previous keypoint schemas are shown in Figure 3.
 
-##### Intermediate Results
+<h5>Figure 3: Example frame of our multi-cow 4-point keypoint labeling (left) and the 10-point (middle) and 17-point (right) cow keypoint schemas proposed in previous works.</h5>
+
+<img src="./figures/KeypointLabeling.png" alt="Sample keypoint labeling frame" height="200"> <img src="./figures/KeypointSchemas.png" alt="Previously proposed cow keypoint schemas" height="200">
+
+After removing frames with no animals present, 972 keypoint frames were then split into a train and validation set with an 80-20 split to be used to train the pose estimation model.
+
+##### Model & Intermediate Results
+
+In order to accomplish multi-object pose estimation, we leveraged the YoloV8-Large-Pose model which takes a 640x640 frame and returns keypoints for each detected object. TODO: expand yolo model, how does it predict? Customized backbone, PAN-FPN neck, and pose estimation head blah blah. Uses a multi-part loss function that combines Complete Intersection over Union (CIoU) loss for the bounding boxes, Binary Cross-Entropy (BCE) loss for the objectness score, BCE loss for multi-class classification, and MSE loss for regressing the keypoint positions. We chose to use the Yolov8L-Pose model because of its competitive performance, extremely fast inference on edge devices, and ease of use. 
+
+Our YoloV8L-Pose model was finetuned on our keypoint dataset described above for 300 epochs total, split into one training run for 200 epochs, and another for 100 epochs when we saw that pose validation loss had not yet converged. Training curves for this training can be seen in Figure 4.
+
+<h5>Figure 4: Training curves of the YoloV8L-Pose model on our custom multi-cow 4-point keypoint dataset.</h5>
+
+<img src="./figures/TrainingCurves.png" alt="Training curves" height="250">
+
+On top of the yolo model, we used a multi-object tracking algorithm called BoT-SORT to automatically assign a tracking id to each detected set of keypoints, based on previous frames' detections. BoT-SORT is an advanced algorithm that combines appearance features, motion prediction using Kalman filtering, history-detection matching using the Hungarian algorithm, and introduces Camera Motion Compensation (CMC) and appearance embedding (ReID) matching tricks. We chose this particular tracking layer because of its robustness to occlusion and real-time inference. Due to our limited time, we were not able to quantitatively evaluate the BoT-SORT tracking algorithm.
+
+<h5>Figure 6: Example YoloV8L-pose keypoint estimation and BoT-SORT tracking (seen in 'id' field in text).</h5>
 
 <img src="./figures/YoloPreds.gif" alt="Example outputs of the yolo model and tracking layer" width="500">
 
