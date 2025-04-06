@@ -46,21 +46,37 @@ We aim to explore automatic lameness detection in complex, multi-cow scenes (sho
 
 ## The Data
 
-### Data Collection
+To answer our research questions, it was clear that we would need the help of experienced professionals, not only to get access to complex, multi-cow scene videos, but also to help verify lameness labels. Associate Professor and veterinarian, Dr. Dörte Döpfer, in the Food Animal Production Medicine (FAPM) department at UW-Madison's School of Veterinary Medicine (SVM), recorded more than six hours of footage and graciously allowed us access to it with the agreement that this data was highly private and any resulting labeling or work would be under her supervision, but we would be credited. The six hours of footage were recorded with informed consent using GoPro cameras at a private midwestern dairy with more than 9 thousand cows of varying ages, breeds, and colorings. 
 
-### Data Annotation
+The data was annotated by us in three different ways to be used in three different methods all of which is explained below. Labels related to lameness were verified by Dr. Döpfer.
 
-## Methods & Intermediate Results
+## Approaches & Intermediate Results
 
 ### Video Action Recognition
+
+In currently existing literature, no one has tried end-to-end video action recognition on cattle lameness before. Thus, we decided to test this out.
+
+#### Data Annotation
+
+Subsets of the 6 hours of source footage were randomly selected for processing and were split into over one thousand 5 second clips. These 5 second clips were then either pseudo labeled by us and then verified by Dr. Döpfer, or directly labeled by Dr. Döpfer without our assistance. This yielded 987 clips with a 'Not Lame', 'Subclinically Lame', or 'Clinically Lame' label. It was decided that if there was a single cow in the clip that was lame, the whole clip would be labeled as such, with a worst label priority rule. These clips and labels would be used to train our video action recognition models.
+
+#### Intermediate Results
 
 ### Multi-Cow Localization + Classification
 
 #### Pose Estimation + Tracking: Yolov8l-pose + BoT-SORT
 
+##### Data Annotation
+
+##### Intermediate Results
+
 <img src="./figures/YoloPreds.gif" alt="Example outputs of the yolo model and tracking layer" width="500">
 
-#### Lameness Classification
+#### Lameness Classification: RNNs
+
+##### Data Annotation
+
+##### Intermediate Results
 
 ### Other Tried Methods
 
