@@ -54,13 +54,26 @@ The data was annotated by us in three different ways to be used in three differe
 
 ### Video Action Recognition
 
-In currently existing literature, no one has tried end-to-end video action recognition on cattle lameness before. Thus, we decided to test this out.
+To the best of our knowledge, no one in existing literature has tried end-to-end video action recognition on cattle lameness before. Thus, we decided to try this.
 
 #### Data Annotation
 
-Subsets of the 6 hours of source footage were randomly selected for processing and were split into over one thousand 5 second clips. These 5 second clips were then either pseudo labeled by us and then verified by Dr. Döpfer, or directly labeled by Dr. Döpfer without our assistance. This yielded 987 clips with a 'Not Lame', 'Subclinically Lame', or 'Clinically Lame' label. It was decided that if there was a single cow in the clip that was lame, the whole clip would be labeled as such, with a worst label priority rule. These clips and labels would be used to train our video action recognition models.
+Subsets of the 6 hours of source footage were randomly selected for processing and were split into over one thousand 5 second clips. These 5 second clips were then either pseudo labeled by us and then verified by Dr. Döpfer, or directly labeled by Dr. Döpfer without our assistance. This yielded 1,015 clips with a 'Not Lame' (78.23%), 'Subclinically Lame' (13.69%), or 'Clinically Lame' (8.08%) label. It was decided that if there was a single cow in the clip that was lame, the whole clip would be labeled as such, with a worst label priority rule. These clips were then split into train (80%), validation (10%), and test (10%) sets to be used to train and evaluate our video action recognition models. Since the distribution of the different labels was significantly unbalanced, a balanced version of the training dataset was also created where the two lame labels were oversampled (essentially tripled) to form a label distribution of 38.63%, 36.10%, and 25.27%. The 'Not Lame' label was not undersampled to still allow the model to learn animal variability.
 
-#### Intermediate Results
+#### Model & Intermediate Results
+
+For this experiment, we leveraged I3D, a standard video action recognition model pretrained on Kinetics-400 which takes 32 224x224 frames as input. We finetuned the model for 10 epochs using stochastic gradient descent with random cropping and horizontal flipping on the unbalanced and balanced datasets described above. The resulting top1 accuracy and average top1 accuracy across the three classes is shown in Table 1.
+
+<h5>Table 1: Top1 accuracy and average top1 accuracy of all classes of the finetuned I3D model on our custom cattle lameness dataset.</h5>
+
+| Dataset   | Top1 Accuracy† | Mean Class Top1 Accuracy  |
+|-----------|------------|-----------------------|
+| Raw       | 71.28      | 37.41                 |
+| Balanced  | 47.52      | 42.42                 |
+
+<h6>† Top1 Accuracy refers to the percentage of samples for which the top predicted class is the correct label.</h6>
+
+We see that end-to-end video action recognition has a lot of trouble with spotting lameness. I3D is pretrained on human actions which are often obvious from a single frame or a few frames, thus its 32 resized frame sampling strategy is effective. In our case, fine-grained (frame-by-frame) temporal relationships are necessary to identify lameness, which I3D's 32 resized frame sampling strategy can't deal with effectively. Furthermore, I3D must learn to deal with a lot of variability in each scene including cow positions, cow colorings, and cow tracking. Perhaps controlling the sampling strategy to be more fine-grained could improve I3D's performance, but we simply don't have enough data to teach an I3D model how to handle this fine-grained temporal information while also being robust to scene variabilities. Thus, we look into approaches that abstract away the scene variabilities to hopefully focus on the important temporal information that can signify lamenesse in a cow. These dimensionality reduction approaches also have the added benefit of likely being much faster than I3D.
 
 ### Multi-Cow Localization + Classification
 
