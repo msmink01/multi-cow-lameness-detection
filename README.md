@@ -1,6 +1,6 @@
 # Automatic Lameness Detection in Complex Multi-Cow Scenes
 
-By Moniek Smink, Pratham Johari, and Talitha Aarnoutse (Group 16; DSAIT 4125 at TU-Delft) in collaboration with the University of Wisconsin-Madison School of Veterinary Medicine.
+<h4>By Moniek Smink, Pratham Johari, and Talitha Aarnoutse (Group 16; DSAIT 4125 at TU-Delft) in collaboration with the University of Wisconsin-Madison School of Veterinary Medicine.</h4>
 
 # Background & Motivation
 
