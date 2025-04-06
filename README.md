@@ -42,7 +42,7 @@ We aim to explore automatic lameness detection in complex, multi-cow scenes (sho
 1. How does an existing computer vision technique, such as end-to-end video action recognition, perform in a difficult task such as multi-cow lameness detection?
 2. How can an automatic lameness detection system be made robust to inter- and intra- animal variability in a large production environment, while still being portable and efficient?
 
-In our efforts, we contribute a new dataset, privately available, for complex, multi-cow scenes with three label types. We deliberate existing video action recognition methods' capabilities on this dataset. And, we propose a real-time two-stage lameness classification pipeline moving towards classifying lameness in complex, multi-cow scenes.
+In our efforts, we contribute a new multi-purpose dataset, privately available, for complex, multi-cow scenes. We deliberate existing video action recognition methods' capabilities on this dataset. And, we propose a real-time two-stage lameness detection pipeline moving towards classifying lameness in complex, multi-cow scenes.
 
 # Methods & Intermediate Results
 
@@ -75,7 +75,7 @@ For this experiment, we leveraged I3D<sup>7</sup>, a standard video action recog
 
 <h6>† Top1 Accuracy refers to the percentage of samples for which the top predicted class is the correct label.</h6>
 
-### Discussion & Next Steps
+### Discussion/Next Steps
 
 We see that end-to-end video action recognition has trouble with spotting lameness. I3D is pretrained on human actions which are often obvious from a single frame or a few frames, thus its 32 resized frame sampling strategy is effective. In our case, fine-grained (frame-by-frame) temporal relationships are necessary to identify lameness, which I3D's 32 resized frame sampling strategy can't deal with effectively. Furthermore, I3D must learn to deal with a lot of variability in each scene including cow positions, colorings, and occlusion. Controlling the sampling strategy to be more fine-grained could improve I3D's performance, but we don't have enough data to teach an I3D model how to handle this fine-grained temporal information while also being robust to scene variabilities. Thus, we look into approaches that abstract away the scene variabilities to focus on the important temporal information that can signify lameness in a cow. These dimensionality reduction approaches also have the added benefit of being more efficient.
 
@@ -172,13 +172,19 @@ We see, again, that the task of lameness classification is challenging and that 
 
 ## Final Results
 
+<h5>Table 4: Final performance of our YoloV8L-Pose/BoT-SORT/GRU lameness recognition pipeline on our multi-cow dataset.</h5>
 
+| tID Top1 Accuracy | Average Clip Macro-F1  | Average Clip Weighted-F1  |
+|-----------|------------|-----------------------|
+| 79.08%       | 54.70      | 82.09              |
 
 <img src="./figures/Final2.gif" alt="Final example outputs of our final pipeline" width="700">
 
 ## Conclusions & Future Work
 
-### Future Work
+Cattle lameness is a challenging multi-billion dollar/euro issue that all producers in cattle husbandry face. Early detection of lameness is crucial to effective and cheap treatment, but is difficult for untrained professionals to identify and infeasible to recognize at large scales. Existing methods focus on clean, single-cow scenes that don't generalize to real-world production environments. Our work is one of the first to handle lameness detection in complex, multi-cow scenes. We developed a challenging multi-purpose dataset with expert-verified labels that can be used to compare methods. We made steps towards a robust, scalable, and real-time pipeline, capable of handling inter- and intra- scene variability by extracting key features. 
+
+In the future, we aim to further investigate solutions to data imbalance including collecting more lameness data and augmenting the data we have. We aim to investigate attention mechanisms and other skeletal action recognition methods capable of handling fine-grained temporal relationships to classify lameness better in addition to more robust tracking layers. Finally, we aim to create a farm-ready pipeline on an NVIDIA Jetson edge device to demonstrate this technology to relevant stakeholders on-farm. With more polishing our work has the potential to sustainably improve one of the biggest challenges in cattle welfare.
 
 Thank you for your attention.
 
