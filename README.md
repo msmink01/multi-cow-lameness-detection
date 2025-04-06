@@ -6,7 +6,7 @@
 
 Cattle husbandry, or the raising of cattle to produce diversified products for consumption, is a huge worldwide industry. The US alone houses more than 89 million cattle, creating an income of more than $80 billion every year<sup>1</sup>. 
 
-After reproduction and mastitis issues, the third most import dairy production health problem is cattle lameness, seen as abnormal movement and/or extreme posture, such as limping, abnormal headbobbing, or back arching<sup>2</sup>. Lameness is a sign of pain or discomfort within the locomotor system of the animal and is often caused by bacterial infection or improper hoof trimming. Lameness is measured in different ways, including 3, 4, and 9 point scales. For the purposes of this report, we separate two types of cattle lameness: 
+Tthe third most import dairy production health problem is cattle lameness, seen as abnormal movement and/or extreme posture, such as limping, abnormal headbobbing, or back arching<sup>2</sup>. Lameness is a sign of pain or discomfort within the locomotor system of the animal and is often caused by bacterial infection or improper hoof trimming. Lameness is measured in different ways, including 3, 4, and 9 point scales. For the purposes of this report, we separate two types of cattle lameness: 
 
 1. Clinical Lameness: when the animal is noticeably lame.
 2. Subclinical Lameness: when the animal's lameness is subtle.
@@ -31,9 +31,9 @@ Several approaches exist, commercially and in the research community, that autom
 
 <img src="./figures/multi.gif" alt="Multi-cow scene example 1" width="300"> <img src="./figures/multi2.gif" alt="Multi-cow scene example 2" width="300"> <img src="./figures/snout.gif" alt="Multi-cow scene example 3" width="300">
 
-Finally, none of the open-source approaches for automatic lameness detection use more advanced computer vision techniques such as end-to-end video action recognition <sup>7</sup>, or skeletal action recognition<sup>4,5,6</sup>, although other tasks such as cattle behavior recognition have explored such methods <sup>10</sup>. Existing approaches often employ a three stage approach. First, they localize the animal using foot detection, cow pose estimation, or cow segmentation with methods such as Faster-RCNN, T-LEAP, and Mask-RCNN. They then calculate hand-made features such as step length, head bob, and back arch coefficients. Finally they classify based on traditional discriminative classifiers such as support vector machines (SVMs), logistic regression, or decision trees<sup>4,5,6</sup>.
+Finally, none of the open-source approaches for automatic lameness detection use more advanced computer vision techniques such as end-to-end video action recognition (VAR)<sup>7</sup>, or skeletal action recognition<sup>4,5,6</sup>, although other tasks such as cattle behavior recognition have explored such methods <sup>10</sup>. Existing approaches often employ a three stage approach. First, they localize the animal using foot detection, cow pose estimation, or cow segmentation with methods such as Faster-RCNN, T-LEAP, and Mask-RCNN. They then calculate hand-made features such as step length, head bob, and back arch coefficients. Finally they classify based on traditional discriminative classifiers such as support vector machines (SVMs), logistic regression, or decision trees<sup>4,5,6</sup>.
 
-A classic end-to-end video action recognition method leveraged in this report is Inflated 3D networks (I3D). I3D is a two stream 3D convolutional neural network (CNN) that uses both RGB and optical flow frame inputs to classify human actions such as kicking and punching in videos<sup>7</sup>. When doing multi-stage video action recognition, localization of important features can be done using pose estimation models<sup>11,13</sup>, which extract keypoints from video frames, and tracking layers<sup>12,14</sup>, which assign these keypoints to individuals over time. After localizing the important features over time, classification can be done using different spatiotemporal methods. First, the temporal component needed to identify lameness makes attention mechanisms and RNN mechanisms<sup>14</sup> particularly promising, as both of these methods have ways to combine temporal contexts to reason over time. Although not fully explored in this report, typical skeletal action recognition methods include spatial temporal graph convolutional networks (ST-GCNs) <sup>8</sup> and Pose C3Ds<sup>9</sup> which process spatiotemporal features using graph convolutions and 3D heatmap convolutions, respectively, to classify actions in videos.
+A classic end-to-end VAR method leveraged in this report is Inflated 3D networks (I3D). I3D is a two stream 3D convolutional neural network (CNN) that uses both RGB and optical flow frame inputs to classify human actions such as kicking and punching in videos<sup>7</sup>. When doing multi-stage VAR, localization of important features can be done using pose estimation models<sup>11,13</sup>, which extract keypoints from video frames, and tracking layers<sup>12,14</sup>, which assign these keypoints to individuals over time. After localizing the important features over time, classification can be done using different spatiotemporal methods. First, the temporal component needed to identify lameness makes attention mechanisms and RNN mechanisms<sup>14</sup> particularly promising, as both of these methods have ways to combine temporal contexts to reason over time. Although not fully explored in this report, typical skeletal action recognition methods include spatial temporal graph convolutional networks (ST-GCNs) <sup>8</sup> and Pose C3Ds<sup>9</sup> which process spatiotemporal features using graph convolutions and 3D heatmap convolutions, respectively, to classify actions in videos.
 
 ### Research Questions & Contributions
 
@@ -42,7 +42,7 @@ We aim to explore automatic lameness detection in complex, multi-cow scenes (sho
 1. How does an existing computer vision technique, such as end-to-end video action recognition, perform in a difficult task such as multi-cow lameness detection?
 2. How can an automatic lameness detection system be made robust to inter- and intra- animal variability in a large production environment, while still being portable and efficient?
 
-In our efforts, we contribute a new multi-purpose dataset, privately available, for complex, multi-cow scenes. We deliberate existing video action recognition methods' capabilities on this dataset. And, we propose a real-time two-stage lameness detection pipeline moving towards classifying lameness in complex, multi-cow scenes.
+In our efforts, we contribute a new multi-purpose dataset, privately available, for complex, multi-cow scenes. We deliberate existing end-to-end VAR methods' capabilities on this dataset. And, we propose a real-time two-stage lameness detection pipeline moving towards classifying lameness in complex, multi-cow scenes.
 
 # Methods
 
@@ -56,19 +56,19 @@ The data was annotated by us in three different ways to be used in three differe
 
 ## 1. End-to-End Video Action Recognition
 
-To the best of our knowledge, no one in existing literature has tried end-to-end video action recognition (VAR) on cattle lameness recognition, but there are parallels between the two tasks. Thus, we decided to explore this.
+To the best of our knowledge, no one in existing literature has tried end-to-end VAR on cattle lameness recognition, but there are parallels between the two tasks. Thus, we decided to explore this.
 
 ### Data Annotation
 
-Subsets of the source footage were randomly selected for processing and were split into five second clips. These clips were then either pseudo labeled by us and then verified by Dr. Döpfer, or directly labeled by Dr. Döpfer without our assistance. This yielded 1,015 clips with a 'Not Lame' (78.23%), 'Subclinically Lame' (13.69%), or 'Clinically Lame' (8.08%) label. It was decided that if there was a single cow in the clip that was lame, the whole clip would be labeled as such, with a worst label priority rule. These clips were then split into train (80%), validation (10%), and test (10%) sets to be used to train and evaluate our VAR models. Since the distribution of the different labels was significantly unbalanced, a balanced version of the training dataset was also created where the two lame labels were oversampled to form a label distribution of 38.63%, 36.10%, and 25.27%. The 'Not Lame' label was not undersampled to still allow the model to learn animal variability.
+Subsets of the source footage were randomly selected for processing and were split into five second clips. These clips were then either pseudo labeled by us and then verified by Dr. Döpfer, or directly labeled by Dr. Döpfer without our assistance. This yielded 1,015 clips with a 'Not Lame' (78.23%), 'Subclinically Lame' (13.69%), or 'Clinically Lame' (8.08%) label. It was decided that if there was a single cow in the clip that was lame, the whole clip would be labeled as such, with a worst label priority rule. These clips were then split into train (80%), validation (10%), and test (10%) sets. Since the distribution of the different labels was significantly unbalanced, a balanced version of the training dataset was also created where the lame labels were oversampled to form a label distribution of 38.63%, 36.10%, and 25.27%. The 'Not Lame' label was not undersampled to still allow the model to learn animal variability.
 
 ### Model & Intermediate Results
 
-For this experiment, we leveraged I3D<sup>7</sup>, a standard VAR model pretrained on Kinetics-400 which takes 32 224x224 frames as input. We finetuned the model for 10 epochs using stochastic gradient descent with random cropping and horizontal flipping on the unbalanced and balanced datasets described above. 
+For this experiment, we leveraged I3D<sup>7</sup>, a standard VAR model described above and pretrained on Kinetics-400 which takes 32 224x224 frames as input. We finetuned the model for 10 epochs using stochastic gradient descent with random cropping and horizontal flipping on the unbalanced and balanced dataset. 
 
-## 2. Multi-Cow Localization + Classification
+## 2. Two-Stage VAR: Multi-Cow Localization + Classification
 
-In order to abstract away scene variabilities such as coloring, behavior, occlusion, and surroundings, we also leveraged a two step approach. We first localize and track important features of a cow over time and then, based on that sequence of tracked features, predict lameness for that localized cow.
+In order to abstract away scene variabilities such as coloring, behavior, occlusion, and surroundings, we also leveraged a two step VAR approach. We first localize and track important features of a cow over time and then, based on that sequence of tracked features, predict lameness for that localized cow.
 
 ### Pose Estimation + Tracking
 
@@ -88,7 +88,7 @@ After removing frames with no animals present, 972 keypoint frames were then spl
 
 ##### YoloV8L-Pose
 
-In order to accomplish multi-object pose estimation, we leveraged the YoloV8-Large-Pose model<sup>11</sup> which takes a 640x640 frame and returns keypoints for each detected object using a customized backbone, PAN-FPN neck, and pose estimation prediction head. A multi-part loss function is used that combines complete Intersection over Union (IoU) loss, two Binary Cross-Entropy (BCE) losses, and MSE loss for its various outputs including bouding boxes, class/objectness scores, and keypoints. We chose to use the Yolov8L-Pose model because of its competitive performance, extremely fast inference on edge devices, and ease of use. 
+In order to accomplish multi-object pose estimation, we leveraged the YoloV8-Large-Pose model<sup>11</sup> which takes a 640x640 frame and returns keypoints for each detected object using a customized CSP backbone, PAN-FPN style neck, and pose estimation head. A multi-part loss function is used that combines complete Intersection over Union (IoU) loss, two Binary Cross-Entropy (BCE) losses, and MSE loss for its various outputs including bouding boxes, class/objectness scores, and keypoints. We chose to use the Yolov8L-Pose model because of its competitive performance, extremely fast inference on edge devices, and ease of deployment. 
 
 Our YoloV8L-Pose model was finetuned on our keypoint dataset for 300 epochs, split into two training runs for 200 epochs, and another for 100 epochs when we saw that pose validation loss had not yet converged.
 
