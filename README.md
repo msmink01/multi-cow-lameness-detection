@@ -73,6 +73,8 @@ For this experiment, we leveraged I3D, a standard video action recognition model
 
 <h6>† Top1 Accuracy refers to the percentage of samples for which the top predicted class is the correct label.</h6>
 
+#### Discussion & Next Steps
+
 We see that end-to-end video action recognition has a lot of trouble with spotting lameness. I3D is pretrained on human actions which are often obvious from a single frame or a few frames, thus its 32 resized frame sampling strategy is effective. In our case, fine-grained (frame-by-frame) temporal relationships are necessary to identify lameness, which I3D's 32 resized frame sampling strategy can't deal with effectively. Furthermore, I3D must learn to deal with a lot of variability in each scene including cow positions, cow colorings, and cow tracking. Perhaps controlling the sampling strategy to be more fine-grained could improve I3D's performance, but we simply don't have enough data to teach an I3D model how to handle this fine-grained temporal information while also being robust to scene variabilities. Thus, we look into approaches that abstract away the scene variabilities to hopefully focus on the important temporal information that can signify lamenesse in a cow. These dimensionality reduction approaches also have the added benefit of likely being much faster than I3D.
 
 ### Multi-Cow Localization + Classification
