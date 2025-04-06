@@ -136,13 +136,38 @@ On top of the yolo model, we used a multi-object tracking algorithm called BoT-S
 
 #### Discussion
 
-The difficulty of complex multi-cow scene parsing is apparent through our intermediate results. The keypoints remain relatively faithful to the correct leg for easily visible cows. For occluded cows in a crowd, keypoint estimation becomes a lot more sporadic. Furthermore, the tracking layer often assigns multiple tracking ids to the same cow, likely because it has become so used to occluded cows. It is also hard to truly quantify our models' performance because we do not compare to any baseline. Given more time we would have wanted to compare different multi-object pose estimation models, such as ViTPose<sup>13</sup>, and tracking layers, such as ByteTrack<sup>14</sup>, to our current models on our custom multi-cow dataset.
+The difficulty of complex multi-cow scene parsing is apparent through our intermediate results. The keypoints remain relatively faithful to the correct leg for easily visible cows. For occluded cows in a crowd, keypoint estimation becomes a lot more sporadic. Furthermore, the tracking layer often assigns multiple tracking ids to the same cow, likely because it has become more stringent due to seeing so many occluded cows. It is also hard to truly quantify our models' performance because we do not compare to any baseline. Given more time we would have wanted to compare different multi-object pose estimation models, such as ViTPose<sup>13</sup>, and tracking layers, such as ByteTrack<sup>14</sup>, to our current models on our custom multi-cow dataset.
 
 ### Lameness Classification
 
+After hopefully localizing the feet over time using the Localization + Tracking pipeline, a lameness classifier needs to take these sequences of keypoint locations and hopefully determine the correct lameness label.
+
 #### Data Annotation
 
+In order to obtain sequences of keypoints over time with lameness labels, we took our 1,015 labeled 5 second clips from the video action recognition experiment and performed keypoint + tracking inference using our YoloV8L-Pose + BoT-SORT pipeline. For each clip, we now had a set of tracking ids (tIDs). Each tID had a list of frame numbers where that tID appeared along with the four keypoints found in that frame for that tID. We reasoned that any tID with less than 20 frames should not be used to classify lameness because, at 30 FPS, 20 frames would be less than a single step of a cow. Furthermore, Dr. Döpfer identified 43 clips with situations where lameness scoring was basically impossible due to cow crowds or human interference; these clips were thus also not used to classify lameness. After this filtering, this left us with a total of 7,897 sequences of keypoints over the clips (tIDs to process). We then went back through every single clip along with the lameness labels we got from Dr. Döpfer to match each tID to a vet-confirmed label. This dataset was then split into train (80%), validation (10%), and test (10%) sets ready for training lameness classification models from keypoint histories. In general, this dataset was extremely unbalanced, with around 95%, 3%, and 2% of the samples being in the 'Not Lame', 'Subclinically Lame', and 'Clinically Lame' classes, respectively.
+
 #### Model & Intermediate Results
+
+Because our Localization + Tracking pipeline was functioning at near real-time, we decided to first try very simple architectures, namely RNNs. Two simple RNNs were trained:
+
+1. A two-layer GRU with single linear projection layer
+2. A three-layer bidirectional LSTM with dual projection layers for each direction
+
+Becaue of the extreme data imbalance, the Cross Entropy Loss was weighted according to the class distribution, yielding weights of 1 / 95 for the 'Not Lame' samples, 1 / 3 for the 'Subclincially Lame' samples, and 1  / 2 for the 'Clinically Lame' samples. The models were trained for 600 epochs each and the best model was saved as the one with the highest validation macro-F1 score. Results for each type of RNN can be seen in Table 3. The confusion matrix for the GRU-based model can be seen in Figure 7.
+
+<h5>Table 3: Macro- and Weighted- F1 scores for the GRU-based and BiLSTM-based lameness classification models.</h5>
+
+| Model   | Macro-F1† | Weighted-F1*  |
+|-----------|------------|-----------------------|
+| GRU       | 35.98      | 83.85                 |
+| BiLSTM  | 34.97      | 83.60                 |
+
+<h6>† Macro-F1: the average F1 score for all classes, weighted equally.</h6>
+<h6>* Weighted-F1: the average F1 score for all classes, weighted by class prevalence.</h6>
+
+<h5>Figure 7: Confusion matrix of the GRU-based lameness classification model on our custom keypoint-based lameness classification dataset</h5>
+
+<img src="./figures/cm.png" alt="A confusion matrix" width="200">
 
 #### Discussion
 
