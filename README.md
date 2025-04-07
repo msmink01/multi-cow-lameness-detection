@@ -117,8 +117,6 @@ With the goal of creating real-time pipeline, we decided to first try very simpl
 
 To try to mitigate the extreme data imbalance, the Cross Entropy Loss was weighted according to the class distribution, yielding weights of 1/95, 1/3, and 1/2 for the 'Not Lame', 'Subclinically Lame', and 'Clinically Lame' samples, respectively. The models were trained for 600 epochs while saving at epochs with the highest macro-F1 score on the validation set.
 
-### Other Tried Methods
-
 ## Results & Discussion
 
 ### End-to-End Video Action Recognition Model
@@ -184,9 +182,9 @@ Results for each type of lameness classification RNN can be seen in Table 3. Bec
 
 We see, again, that the task of multi-cow lameness classification is challenging and that the class imbalance impacts our performance. In the confusion matrix and the example , we see plenty of false positives and negatives, likely because of the class reweighting in the loss function and the difficulty of the task. A lot of our keypoint sequences were very short (<50 frames), meaning the cow would have barely taken a step. If this step did not involve the lame foot, the model would have no indication that this cow is lame, thus, classifying these sequences would be infeasible. Interestingly, the simpler GRU classifier performed slightly better than the BiLSTM classifier, indicating that an online lameness classifier that processes frames only in the forward direction without needing to know the future is feasible. Given more time, our team would have liked to compare our RNN classifiers' performance to an attention based model to see whether the global context handling can be done in different ways. Finally, we would have liked to train more advanced skeletal action recognition methods such as PoseC3D<sup>9</sup> and ST-GCNs<sup>8</sup>.
 
-##### Other Approaches
+##### Other Tried Methods
 
-In addition to the above mentioned methods, we also explored a rule-based method that was inspired by a previous approach that analyzed the supporting phases of the feet<sup>16</sup>. Their dataset size was however limited and consisted of only single-cow scenes. We applied a similar method by estimating the supporting phases for each cow based on the keypoints for each foot. Unfortunately, in our more complex, multi-cow scene data, we were unable to find a correlation between the supporting phase and the degree of lameness, and our model only predicted the majority class. The method might have been improved if we could address the issue of cows having multiple tracking tIDs, but time constraints led us to abandon this approach.
+We also explored a rule-based method based on the foot supporting phase inspired by a previous single-cow approach tested on 100 cows<sup>16</sup>. Unfortunately, in our complex, multi-cow scene data, we were unable to find a correlation between supporting phase and degree of lameness. The method might have been improved with a better tracking layer, but time constraints led us to abandon this approach.
 
 #### Overall Performance
 
