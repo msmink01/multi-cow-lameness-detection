@@ -80,7 +80,7 @@ We first localize a cow using pose estimation with keypoints. This step removes 
 
 #### Data Annotation
 
-We randomly select 1,015 frames from our source footage and label four keypoints with optional occlusion or out-of-frame flags per cow present in the frame using CVAT. The four keypoints we chose to label were the four feet: right front, right rear, left rear, and left front. We chose this keypoint schema to deal with occlusion and make processing more efficient. Previous 10-point or 17-point cattle keypoint schemas would flood the classification model with potentially unecessary keypoints that are not usually available in multi-cow scenes. This would make our keypoint model and the downstream classification model more unstable and inefficient, thus we decided to only use the four feet keypoints. An example frame labeled by us along with the mentioned 10 and 17-point previous keypoint schemas are shown in Figure 3.
+We randomly select 1,015 frames from our source footage and label four keypoints with optional occlusion or out-of-frame flags per cow present in the frame using CVAT. The four keypoints we chose to label were the four feet: right front, right rear, left rear, and left front. We chose this keypoint schema to deal with occlusion and make processing more efficient. Previous 10-point or 17-point cattle keypoint schemas would flood the classification model with potentially unnecessary keypoints that are not usually available in multi-cow scenes. This would make our keypoint model and the downstream classification model more unstable and inefficient, thus we decided to only use the four feet keypoints. An example frame labeled by us along with the mentioned 10 and 17-point previous keypoint schemas are shown in Figure 3.
 
 <h5>Figure 3: Example frame of our multi-cow keypoint labeling (left) and the 10-point (middle) and 17-point (right) cow keypoint schemas proposed in previous works.</h5>
 
@@ -92,7 +92,7 @@ After removing frames with no animals present, 972 keypoint frames were then spl
 
 ##### YoloV8L-Pose
 
-In order to accomplish multi-object pose estimation, we leveraged the YoloV8-Large-Pose model<sup>11</sup> which takes a 640x640 frame and returns keypoints for each detected object using a customized CSP backbone, PAN-FPN style neck, and pose estimation head. A multi-part loss function is used that combines complete Intersection over Union (IoU) loss, two Binary Cross-Entropy (BCE) losses, and MSE loss for its various outputs including bouding boxes, class/objectness scores, and keypoints. We chose to use the Yolov8L-Pose model because of its competitive performance, extremely fast inference on edge devices, and ease of deployment. 
+In order to accomplish multi-object pose estimation, we leveraged the YoloV8-Large-Pose model<sup>11</sup> which takes a 640x640 frame and returns keypoints for each detected object using a customized CSP backbone, PAN-FPN style neck, and pose estimation head. A multi-part loss function is used that combines complete Intersection over Union (IoU) loss, two Binary Cross-Entropy (BCE) losses, and MSE loss for its various outputs including bounding boxes, class/objectness scores, and keypoints. We chose to use the Yolov8L-Pose model because of its competitive performance, extremely fast inference on edge devices, and ease of deployment. 
 
 Our YoloV8L-Pose model was finetuned on our keypoint dataset for 300 epochs, split into two training runs for 200 epochs, and another for 100 epochs when we saw that pose validation loss had not yet converged.
 
@@ -110,12 +110,12 @@ In order to obtain sequences of keypoints over time with lameness labels, we too
 
 #### Model Selection
 
-With the goal of creating real-time pipeine, we decided to first try very simple architectures for lameness classification, namely RNNs, as a baseline. Two simple RNNs were trained:
+With the goal of creating real-time pipeline, we decided to first try very simple architectures for lameness classification, namely RNNs, as a baseline. Two simple RNNs were trained:
 
 1. Two-layer GRU with single linear layer
 2. Three-layer bidirectional-LSTM with two linear layers for each sequence direction
 
-To try to mitigate the extreme data imbalance, the Cross Entropy Loss was weighted according to the class distribution, yielding weights of 1/95, 1/3, and 1/2 for the 'Not Lame', 'Subclincially Lame', and 'Clinically Lame' samples, respectively. The models were trained for 600 epochs while saving at epochs with the highest macro-F1 score on the validation set.
+To try to mitigate the extreme data imbalance, the Cross Entropy Loss was weighted according to the class distribution, yielding weights of 1/95, 1/3, and 1/2 for the 'Not Lame', 'Subclinically Lame', and 'Clinically Lame' samples, respectively. The models were trained for 600 epochs while saving at epochs with the highest macro-F1 score on the validation set.
 
 ### Other Tried Methods
 
