@@ -186,6 +186,8 @@ We see, again, that the task of multi-cow lameness classification is challenging
 
 ##### Other Approaches
 
+In addition to the above mentioned methods, we also explored a rule-based method that was inspired by a previous approach that analyzed the supporting phases of the feet<sup>16</sup>. Their dataset size was however limited and consisted of only single-cow scenes. We applied a similar method by estimating the supporting phases for each cow based on the keypoints for each foot. Unfortunately, in our more complex, multi-cow scene data, we were unable to find a correlation between the supporting phase and the degree of lameness, and our model only predicted the majority class. The method might have been improved if we could address the issue of cows having multiple tracking tIDs, but time constraints led us to abandon this approach.
+
 #### Overall Performance
 
 The overall quantitative performance of our two-stage lameness recognition pipeline on our test dataset can be seen in Table 4. A qualitative example can be seen in Figure 8.
@@ -232,5 +234,6 @@ We would like to thank the researchers and veterinarians at UW-Madison and the f
 13. Xu, Y., Zhang, J., Zhang, Q., & Tao, D. (2022). Vitpose: Simple vision transformer baselines for human pose estimation. Advances in neural information processing systems, 35, 38571-38584
 14. Zhang, Y., Sun, P., Jiang, Y., Yu, D., Weng, F., Yuan, Z., ... & Wang, X. (2022, October). Bytetrack: Multi-object tracking by associating every detection box. In European conference on computer vision (pp. 1-21). Cham: Springer Nature Switzerland.
 15. Zhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2024). Dive into Deep Learning. Cambridge University Press.
+16. Kang, X., Zhang, X., & Liu, G. (2020). Accurate detection of lameness in dairy cattle with computer vision: A new and individualized detection strategy based on the analysis of the supporting phase. Journal of Dairy Science, 103(11), 10628–10638. https://doi.org/10.3168/jds.2020-18288
 
 
