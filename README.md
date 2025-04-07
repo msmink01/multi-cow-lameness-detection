@@ -21,11 +21,11 @@ Please see examples of a clinical and subclinical animal in Figure 1.
 
 <img src="./figures/Clinical.gif" alt="Clinically lame cow" width="300"> <img src="./figures/Subclinical2.gif" alt="Subclinically lame cow" width="300">
 
-Lameness is a huge issue, impacting around 21% of all the world's cattle<sup>3</sup>. If left untreated, lameness is extremely painful and has severe impacts on the health and welfare of a cow. It also is a severe detriment to a farm's production, significantly lowering milk yields<sup>3</sup>. Lameness is often a sign of infection, which, if left untreated, can cause extremely high somatic cell counts (antibody cell counts) in the milk of a cow, also decreasing the quality of the milk. This is a multi-billion $/€ issue affecting hundreds of millions of animals and farmers.
+Lameness is a huge issue, impacting around 21% of all the world's cattle<sup>3</sup>. If left untreated, lameness is extremely painful and has severe impacts on the health and welfare of a cow. It also is a severe detriment to a farm's production, significantly lowering milk yields<sup>3</sup>. Lameness is associated with inflammation and infection, which, if left untreated, often cause costly problems with mammary, skin, and horn tissues<sup>2</sup>. This is a multi-billion $/€ issue affecting hundreds of millions of animals and farmers.
 
-What also makes cattle lameness such a significant issue is how challenging it is to manage. Clinical cases are easier to identify but are not always treatable<sup>3</sup>. Subclinical cases are almost always cheaply treatable, but are extremely difficult for untrained eyes to identify<sup>3</sup>. Ideally, a farmer would want to identify lameness in the subclinical stage because of the easier and cheaper treatment. On huge farms with thousands of cattle, spotting these subclinical cases early is incredibly difficult.
+What also makes cattle lameness such a significant issue is how challenging it is to manage. Clinical cases are easier to identify but are not always treatable<sup>3</sup>. Subclinical cases are almost always readily treatable, but are extremely difficult for untrained eyes to identify<sup>3</sup>. Ideally, a farmer would want to identify lameness at the subclinical stage because of the easier and cheaper treatment. On huge farms with thousands of cattle, spotting these subclinical cases early is incredibly difficult.
 
-Thus, the cattle husbandry industry has turned to computer vision as a potential solution to automatically detect lameness in cattle. These systems must be portable to real-world environments, meaning that they must function with limited computational resources, without wifi, and in dirty environments. Furthermore, these systems must operate in close to real-time because, on thousand cow dairies, a system will not have time to process a backlog of footage before a new batch of cows arrive.
+Thus, the cattle husbandry industry has turned to computer vision as a potential solution to automatically detect lameness in cattle. These systems must be portable to real-world environments, meaning that they must function with limited computational resources, without wifi, and in challenging environments. Furthermore, these systems must operate in close to real-time because, on thousand cow dairies, a system will not have time to process a backlog of footage before a new batch of cows arrives.
 
 ### Related Work
 
@@ -35,7 +35,7 @@ Several approaches exist, commercially and in the research community, that autom
 
 <img src="./figures/multi.gif" alt="Multi-cow scene example 1" width="300"> <img src="./figures/multi2.gif" alt="Multi-cow scene example 2" width="300"> <img src="./figures/snout.gif" alt="Multi-cow scene example 3" width="300">
 
-Finally, none of the open-source approaches for automatic lameness detection use more advanced computer vision techniques such as end-to-end video action recognition (VAR)<sup>7</sup>, or skeletal action recognition<sup>4,5,6</sup>, although other tasks such as cattle behavior recognition have explored such methods <sup>10</sup>. Existing approaches often employ a three stage approach. First, they localize the animal using foot detection, cow pose estimation, or cow segmentation with methods such as Faster-RCNN, T-LEAP, and Mask-RCNN. They then calculate hand-made features such as step length, head bob, and back arch coefficients. Finally they classify based on traditional discriminative classifiers such as support vector machines (SVMs), logistic regression, or decision trees<sup>4,5,6</sup>.
+Finally, none of the open-source approaches for automatic lameness detection use more advanced computer vision techniques such as end-to-end video action recognition (VAR)<sup>7</sup>, or skeletal action recognition<sup>4,5,6</sup>, although other tasks such as cattle behavior recognition have explored such methods <sup>10</sup>. Existing approaches often employ a three stage approach. First, they localize the animal using foot detection, cow pose estimation, or cow segmentation with methods such as Faster-RCNN, T-LEAP, and Mask-RCNN. They then calculate hand-made features such as step length, head bob, and back arch coefficients. Finally they classify lameness based on traditional discriminative classifiers such as support vector machines (SVMs), logistic regression, or decision trees<sup>4,5,6</sup>.
 
 A classic end-to-end VAR method leveraged in this report is Inflated 3D networks (I3D). I3D is a two stream 3D convolutional neural network (CNN) that uses both RGB and optical flow frame inputs to classify human actions such as kicking and punching in videos<sup>7</sup>. When doing multi-stage VAR, localization of important features can be done using pose estimation models<sup>11,13</sup>, which extract keypoints from video frames, and tracking layers<sup>12,14</sup>, which assign these keypoints to individuals over time. After localizing the important features over time, classification can be done using different spatiotemporal methods. First, the temporal component needed to identify lameness makes attention mechanisms and RNN mechanisms<sup>14</sup> particularly promising, as both of these methods have ways to combine temporal contexts to reason over time. Although not fully explored in this report, typical skeletal action recognition methods include spatial temporal graph convolutional networks (ST-GCNs) <sup>8</sup> and Pose C3Ds<sup>9</sup> which process spatiotemporal features using graph convolutions and 3D heatmap convolutions, respectively, to classify actions in videos.
 
@@ -43,8 +43,8 @@ A classic end-to-end VAR method leveraged in this report is Inflated 3D networks
 
 We aim to explore automatic lameness detection in complex, multi-cow scenes (shown in Figure 2) using more recent computer vision methods than existing approaches. Our research questions include:
 
-1. How does an existing computer vision technique, such as end-to-end video action recognition, perform in a difficult task such as multi-cow lameness detection?
-2. How can an automatic lameness detection system be made robust to inter- and intra- animal variability in a large production environment, while still being portable and efficient?
+1. How does an existing computer vision technique, such as end-to-end video action recognition, perform during a difficult task such as multi-cow lameness detection?
+2. How can an automatic lameness detection system be made robust to inter- and intra- animal variability in a large dairy production environment, while still being portable and efficient?
 
 In our efforts, we contribute a new multi-purpose dataset, privately available, for complex, multi-cow scenes. We deliberate existing end-to-end VAR methods' capabilities on this dataset. And, we propose a real-time two-stage lameness detection pipeline moving towards classifying lameness in complex, multi-cow scenes.
 
@@ -52,15 +52,15 @@ In our efforts, we contribute a new multi-purpose dataset, privately available, 
 
 ## The Data
 
-To answer our research questions, it was clear that we would need the help of experienced professionals, not only to get access to complex, multi-cow scene videos, but also to help verify lameness labels. Associate Professor and veterinarian at UW-Madison's School of Veterinary Medicine, Dr. Dörte Döpfer recorded more than six hours of footage and graciously allowed us access to it with the agreement that this data was highly private and any resulting labeling or work would be under her supervision, but we would be credited. The six hours of footage were recorded with informed consent using GoPro cameras at a private midwestern dairy with more than 9 thousand cows of varying ages, breeds, and colorings. 
+To answer our research questions, it was clear that we would need the help of experienced professionals, not only to get access to complex, multi-cow scene videos, but also to help verify lameness labels. Professor and veterinarian at UW-Madison's School of Veterinary Medicine, Dr. Dörte Döpfer recorded more than six hours of footage and graciously allowed us access to it with the agreement that this data was highly private and any resulting labeling or work would be under her supervision, but we would be credited for the work. The six hours of footage were recorded with informed consent using GoPro cameras at a private midwestern dairy with more than 9 thousand cows of varying ages, breeds, and colorings. 
 
-The data was annotated by us in three different ways to be used in three different methods. Labels related to lameness were verified by Dr. Döpfer.
+The data was annotated by us in three different ways to be used in three different methods. Labels related to lameness were assigned and confirmed by Dr. Döpfer.
 
 ## Experiments
 
 ## 1. End-to-End Video Action Recognition
 
-To the best of our knowledge, no one in existing literature has tried end-to-end VAR on cattle lameness recognition, but there are parallels between the two tasks. Thus, we decided to explore this.
+To the best of our knowledge, no one in existing literature has tried end-to-end VAR on cattle lameness recognition, but there are parallels between the two tasks. Thus, we decided to explore this approach.
 
 ### Data Annotation
 
