@@ -127,14 +127,14 @@ The top1 accuracy and average top1 accuracy of the I3D model on the raw and bala
 
 <h5>Table 1: Top1 accuracy and average top1 accuracy of all classes of the finetuned I3D model on our custom cattle lameness dataset.</h5>
 
-| Dataset   | Top1 Accuracy[^1] | Mean Class Top1 Accuracy  |
+| Dataset   | Top1 Accuracy† | Mean Class Top1 Accuracy  |
 |-----------|------------|-----------------------|
 |-----------|------------|-----------------------|
 | Raw       | 71.28      | 37.41                 |
 | Balanced  | 47.52      | 42.42                 |
  
  
-[^1]: Top1 Accuracy refers to the percentage of samples for which the top predicted class is the correct label.
+<h6>† Top1 Accuracy refers to the percentage of samples for which the top predicted class is the correct label.</h6>
 
 We see that end-to-end VAR has trouble with spotting lameness. I3D is pretrained on human actions which are often obvious from a single frame or a few frames. However, fine-grained temporal relationships are necessary to identify lameness, which I3D's frame sampling strategy doesn't adequately achieve. Furthermore, I3D must learn to be robust to scene variability such as cow positions, colorings, and occlusion. We don't have enough data to teach an I3D model how to recognize lameness while being robust to scene variabilities. This further justifies our decision to explore two-stage approaches that abstract away the scene variabilities and focus on the important temporal information.
 
@@ -152,13 +152,13 @@ The training curves and final pose precision-recall curve of the YoloV8L-Pose po
 
 <h5>Table 2: Mean Average Precisions (mAPs) for different Intersection-over-Union (IoU) thresholds for the final YoloV8L-Pose model trained on our multi-cow keypoint dataset.</h5>
 
-| Type of Prediction   | mAP@0.5[^2] | mAP@0.5:0.95[^3]  |
+| Type of Prediction   | mAP@0.5<sup>†</sup> | mAP@0.5:0.95*  |
 |-----------|------------|-----------------------|
 | Pose       | 48.49      | 31.96                 |
 | Box  | 43.92      | 19.64                 |
 
-[^2]: mAP@0.5: Mean Average Precision at IoU threshold of 0.5. Indicates how well the model detects objects/keypoints with a reasonable overlap. 
-[^3]: mAP@0.5:0.95: Mean Average Precision averaged over IoU thresholds from 0.5 to 0.95 (in steps of 0.05). A more stringent and comprehensive metric for model performance.
+<h6><sup>†</sup> mAP@0.5: Mean Average Precision at IoU threshold of 0.5. Indicates how well the model detects objects/keypoints with a reasonable overlap.<br>
+ * mAP@0.5:0.95: Mean Average Precision averaged over IoU thresholds from 0.5 to 0.95 (in steps of 0.05). A more stringent and comprehensive metric for model performance.</h6>
 
 <h5>Figure 6: Example YoloV8L-pose keypoint estimation and BoT-SORT tracking, seen in 'id' field, for a short real-world clip.</h5>
 
@@ -172,14 +172,15 @@ Results for each type of lameness classification RNN can be seen in Table 3. Bec
 
 <h5>Table 3: Macro- and Weighted- F1 scores for the GRU-based and BiLSTM-based lameness classification models on the validation set.</h5>
 
-| Model   | Macro-F1[^4] | Weighted-F1[^5]  |
+| Model   | Macro-F1<sup>†</sup> | Weighted-F1*  |
 |-----------|------------|-----------------------|
 | GRU       | 35.98      | 83.85                 |
 | BiLSTM  | 34.97      | 83.60                 |
 
-[^4]: Macro-F1: the average F1 score for all classes, weighted equally. 
+<h6><sup>†</sup> Macro-F1: the average F1 score for all classes, weighted equally.<br>
+ * Weighted-F1: the average F1 score for all classes, weighted by class prevalence.</h6>
 
-[^5]: Weighted-F1: the average F1 score for all classes, weighted by class prevalence.
+<h5>Figure 7: Confusion matrix of the GRU-based lameness classification model on our lameness classification validation dataset.</h5>
 
 <img src="./figures/cm.png" alt="A confusion matrix" width="200">
 
@@ -187,7 +188,7 @@ We see, again, that the task of multi-cow lameness classification is challenging
 
 ##### Other Tried Methods
 
-We also explored a rule-based method based on the foot supporting phase inspired by a previous single-cow approach tested on 100 cows[<sup>16<sup>](#16). Unfortunately, in our complex, multi-cow scene data, we were unable to find a correlation between supporting phase and degree of lameness. The method might have been improved with a better tracking layer, but time constraints led us to abandon this approach.
+We also explored a rule-based method based on the foot supporting phase inspired by a previous single-cow approach tested on 100 cows[<sup>16</sup>](#16). Unfortunately, in our complex, multi-cow scene data, we were unable to find a correlation between supporting phase and degree of lameness. The method might have been improved with a better tracking layer, but time constraints led us to abandon this approach.
 
 #### Overall Performance
 
