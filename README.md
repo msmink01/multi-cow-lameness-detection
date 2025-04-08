@@ -148,13 +148,13 @@ The training curves and final pose precision-recall curve of the YoloV8L-Pose po
 
 <h5>Table 2: Mean Average Precisions (mAPs) for different Intersection-over-Union (IoU) thresholds for the final YoloV8L-Pose model trained on our multi-cow keypoint dataset.</h5>
 
-| Type of Prediction   | mAP@0.5[^†] | mAP@0.5:0.95*  |
+| Type of Prediction   | mAP@0.5<sup>†</sup> | mAP@0.5:0.95*  |
 |-----------|------------|-----------------------|
 | Pose       | 48.49      | 31.96                 |
 | Box  | 43.92      | 19.64                 |
 
-[^†] mAP@0.5: Mean Average Precision at IoU threshold of 0.5. Indicates how well the model detects objects/keypoints with a reasonable overlap.<br>
-* mAP@0.5:0.95: Mean Average Precision averaged over IoU thresholds from 0.5 to 0.95 (in steps of 0.05). A more stringent and comprehensive metric for model performance.
+<h6><sup>†</sup> mAP@0.5: Mean Average Precision at IoU threshold of 0.5. Indicates how well the model detects objects/keypoints with a reasonable overlap.<br>
+* mAP@0.5:0.95: Mean Average Precision averaged over IoU thresholds from 0.5 to 0.95 (in steps of 0.05). A more stringent and comprehensive metric for model performance.</h6>
 
 <h5>Figure 6: Example YoloV8L-pose keypoint estimation and BoT-SORT tracking, seen in 'id' field, for a short real-world clip.</h5>
 
@@ -168,13 +168,13 @@ Results for each type of lameness classification RNN can be seen in Table 3. Bec
 
 <h5>Table 3: Macro- and Weighted- F1 scores for the GRU-based and BiLSTM-based lameness classification models on the validation set.</h5>
 
-| Model   | Macro-F1[^†] | Weighted-F1*  |
+| Model   | Macro-F1<sup>†</sup> | Weighted-F1*  |
 |-----------|------------|-----------------------|
 | GRU       | 35.98      | 83.85                 |
 | BiLSTM  | 34.97      | 83.60                 |
 
-[^†] Macro-F1: the average F1 score for all classes, weighted equally.<br>
-* Weighted-F1: the average F1 score for all classes, weighted by class prevalence.
+<h6><sup>†</sup> Macro-F1: the average F1 score for all classes, weighted equally.<br>
+* Weighted-F1: the average F1 score for all classes, weighted by class prevalence.</h6>
 
 <h5>Figure 7: Confusion matrix of the GRU-based lameness classification model on our lameness classification validation dataset.</h5>
 
