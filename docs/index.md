@@ -1,4 +1,9 @@
-<!-- # Automatic Lameness Detection in Complex Multi-Cow Scenes
+---
+# Feel free to add content and custom Front Matter to this file.
+# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+layout: home
+---
+
 
 <h4>By Moniek Smink, Pratham Johari, and Talitha Aarnoutse (TU-Delft) in collaboration with the University of Wisconsin-Madison School of Veterinary Medicine.</h4>
 
