@@ -19,7 +19,7 @@ Please see examples of a clinical and subclinical animal in Figure 1.
 
 <h5>Figure 1: Examples of a clinically lame cow (left image; first cow: brown) and a subclinically lame cow (right image; third cow: brown).</h5>
 
-<img src="./figures/Clinical.gif" alt="Clinically lame cow" width="300"> <img src="./figures/Subclinical2.gif" alt="Subclinically lame cow" width="300">
+<img src="./figures/Clinical.gif" alt="Clinically lame cow" width="350"> <img src="./figures/Subclinical2.gif" alt="Subclinically lame cow" width="350">
 
 Lameness is a huge issue, impacting around 21% of all the world's cattle<sup>3</sup>. If left untreated, lameness is extremely painful and has severe impacts on the health and welfare of a cow. It also is a severe detriment to a farm's production, significantly lowering milk yields<sup>3</sup>. Lameness is associated with inflammation and infection, which, if left untreated, often cause costly problems with mammary, skin, and horn tissues<sup>2</sup>. This is a multi-billion $/€ issue affecting hundreds of millions of animals and farmers.
 
@@ -33,7 +33,7 @@ Several approaches exist, commercially and in the research community, that autom
 
 <h5>Figure 2: Examples of a complex multi-cow scenes: with human interference (left), with severe occlusion (all), and with typical cow behavior (right).</h5>
 
-<img src="./figures/multi.gif" alt="Multi-cow scene example 1" width="200"> <img src="./figures/multi2.gif" alt="Multi-cow scene example 2" width="200"> <img src="./figures/snout.gif" alt="Multi-cow scene example 3" width="200">
+<img src="./figures/multi.gif" alt="Multi-cow scene example 1" width="250"> <img src="./figures/multi2.gif" alt="Multi-cow scene example 2" width="250"> <img src="./figures/snout.gif" alt="Multi-cow scene example 3" width="250">
 
 Finally, none of the open-source approaches for automatic lameness detection use more advanced computer vision techniques such as end-to-end video action recognition (VAR)<sup>7</sup>, or skeletal action recognition<sup>4,5,6</sup>, although other tasks such as cattle behavior recognition have explored such methods <sup>10</sup>. Existing approaches often employ a three stage approach. First, they localize the animal using foot detection, cow pose estimation, or cow segmentation with methods such as Faster-RCNN, T-LEAP, and Mask-RCNN. They then calculate hand-made features such as step length, head bob, and back arch coefficients. Finally they classify lameness based on traditional discriminative classifiers such as support vector machines (SVMs), logistic regression, or decision trees<sup>4,5,6</sup>.
 
@@ -84,9 +84,9 @@ We randomly select 1,015 frames from our source footage and label four keypoints
 
 <h5>Figure 3: Example frame of our multi-cow keypoint labeling (top) and the 10-point (bottom left) and 17-point (bottom right) cow keypoint schemas proposed in previous works.</h5>
 
-<img src="./figures/KeypointLabeling.png" alt="Sample keypoint labeling frame" height="200">
+<img src="./figures/KeypointLabeling.png" alt="Sample keypoint labeling frame" width="600">
 
-<img src="./figures/KeypointSchemas.png" alt="Previously proposed cow keypoint schemas" height="200">
+<img src="./figures/KeypointSchemas.png" alt="Previously proposed cow keypoint schemas" width="600">
 
 After removing frames with no animals present, 972 keypoint frames were then split into train and validation sets with an 80-20 split.
 
