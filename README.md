@@ -33,7 +33,7 @@ Several approaches exist, commercially and in the research community, that autom
 
 <h5>Figure 2: Examples of a complex multi-cow scenes: with human interference (left), with severe occlusion (all), and with typical cow behavior (right).</h5>
 
-<img src="./figures/multi.gif" alt="Multi-cow scene example 1" width="300"> <img src="./figures/multi2.gif" alt="Multi-cow scene example 2" width="300"> <img src="./figures/snout.gif" alt="Multi-cow scene example 3" width="300">
+<img src="./figures/multi.gif" alt="Multi-cow scene example 1" width="200"> <img src="./figures/multi2.gif" alt="Multi-cow scene example 2" width="200"> <img src="./figures/snout.gif" alt="Multi-cow scene example 3" width="200">
 
 Finally, none of the open-source approaches for automatic lameness detection use more advanced computer vision techniques such as end-to-end video action recognition (VAR)<sup>7</sup>, or skeletal action recognition<sup>4,5,6</sup>, although other tasks such as cattle behavior recognition have explored such methods <sup>10</sup>. Existing approaches often employ a three stage approach. First, they localize the animal using foot detection, cow pose estimation, or cow segmentation with methods such as Faster-RCNN, T-LEAP, and Mask-RCNN. They then calculate hand-made features such as step length, head bob, and back arch coefficients. Finally they classify lameness based on traditional discriminative classifiers such as support vector machines (SVMs), logistic regression, or decision trees<sup>4,5,6</sup>.
 
@@ -82,9 +82,11 @@ We first localize a cow using pose estimation with keypoints. This step removes 
 
 We randomly select 1,015 frames from our source footage and label four keypoints with optional occlusion or out-of-frame flags per cow present in the frame using CVAT. The four keypoints we chose to label were the four feet: right front, right rear, left rear, and left front. We chose this keypoint schema to deal with occlusion and make processing more efficient. Previous 10-point or 17-point cattle keypoint schemas would flood the classification model with potentially unnecessary keypoints that are not usually available in multi-cow scenes. This would make our keypoint model and the downstream classification model more unstable and inefficient, thus we decided to only use the four feet keypoints. An example frame labeled by us along with the mentioned 10 and 17-point previous keypoint schemas are shown in Figure 3.
 
-<h5>Figure 3: Example frame of our multi-cow keypoint labeling (left) and the 10-point (middle) and 17-point (right) cow keypoint schemas proposed in previous works.</h5>
+<h5>Figure 3: Example frame of our multi-cow keypoint labeling (top) and the 10-point (bottom left) and 17-point (bottom right) cow keypoint schemas proposed in previous works.</h5>
 
-<img src="./figures/KeypointLabeling.png" alt="Sample keypoint labeling frame" height="200"> <img src="./figures/KeypointSchemas.png" alt="Previously proposed cow keypoint schemas" height="200">
+<img src="./figures/KeypointLabeling.png" alt="Sample keypoint labeling frame" height="200">
+
+<img src="./figures/KeypointSchemas.png" alt="Previously proposed cow keypoint schemas" height="200">
 
 After removing frames with no animals present, 972 keypoint frames were then split into train and validation sets with an 80-20 split.
 
